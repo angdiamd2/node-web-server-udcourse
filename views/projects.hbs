@@ -1,0 +1,16 @@
+<!DOCTYPE html>  <!--tells the browser what version of html we are using-->
+<html>
+  <head>    <!--Configures the document whereas body outputs to the screen-->
+    <meta charset="utf-8">   <!--tells browser what characters to use-->
+    <title>Some Website</title>  <!--shows the title in the new tab-->
+  </head>
+  <body>
+    <!--<h1>About Page</h1>      This becomes now with the use of templates-->
+    <!-- <h1>{{pageTitle}}</h1> -->
+    {{> header}}
+    <p>Project page text would go here</p>
+    <p>The current date is: {{currentDate}}</p>
+
+    {{> footer}}
+  </body>
+</html>

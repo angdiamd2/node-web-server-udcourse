@@ -160,9 +160,9 @@ app.get('/about',(req,res) => {
 // app.listen(3000,()=>{
 //   console.log('Server is up on port 3000'); //this will type to the terminal once the server is ready
 // });
-app.listen(port,()=>{
-  console.log(`Server is up on port ${port}`); //this will type to the terminal once the server is ready
-});
+// app.listen(port,()=>{
+//   console.log(`Server is up on port ${port}`); //this will type to the terminal once the server is ready
+// });
 
 //Server is now up. Go to Chrome and type localhost:3000 See the page showing 'Hello Express'
 //Check the Developer Tools>Network Refresh page and see localhost request.
@@ -250,3 +250,35 @@ Now the server.js runs as normal locally $node server.js  if you are in the root
 //so type "start":"node server.js"   It is quite important to type "start" because this is what heroku will look for as a key and the value next to it, to understand what s meant to run
 //npm created the "test" script by default
 //if you type $npm start then you run the app as if you typed $node server.js and you simulate what heroku will run
+//you can also type $npm test but we have not set up any tests yet
+//$git status will show that there are modified files
+//$git add .    will add all the files showing up in modified ready for commit, if we want to commit all of them
+//$git status  to see the difference
+//$git commit -m 'Setup start script and heroku port'
+//$git push   to push the commit to the GitHub
+//$heroku create   will create a remote for the git in the heroku app. So far the only remote origin was our pc. Now when we push to github it will also push to heroku
+//our local pc based .git repositorary has now 2 remotes one for github and another for heroku (heroku git repository)
+//You stil have to push to the url just being created
+//$git push heroku
+//after some logs you get Launching and Verifying deploy. There is also the app url which you can copy/paste https://powerful-river-94782.herokuapp.com into the browser and see your app being run from heroku
+//alternatively $heroku open   opens up our app in the default browser
+//if you have your own domain name then you can place that in heroku dashboard setting to post to the heroku allocated web address here https://powerful-river-94782.herokuapp.com
+//in the heroku dashboard you can play with setting sof the app (who has access, analytics etc.)
+
+
+//LIFECYCLE OF AN APPLICATION
+app.get('/projects',(req,res)=>{
+  res.render('projects.hbs',{
+    pageTitle: 'Projects'
+  });
+});
+//duplicate the about.hbs and rename it projects.hbs within the views folder
+//also add a link in the header.hbs for Projects
+
+
+
+
+
+app.listen(port,()=>{
+  console.log(`Server is up on port ${port}`); //this will type to the terminal once the server is ready
+});
