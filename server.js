@@ -1,3 +1,6 @@
+const port = process.env.PORT || 3000;
+
+
 const express = require('express');
 var app = express();   //make a new express app
 
@@ -154,9 +157,13 @@ app.get('/about',(req,res) => {
 //<A> we need to bind the application to a port in our machine (3000 is the common port to use) so it starts listening
 //app.listen(3000);  //$nodemon server.js will keep running for ever or crash if there is an error you will have to stop it manually Ctrl+C
 //app.listen takes a 2nd optional argument, a function that let us do something once the server is up
-app.listen(3000,()=>{
-  console.log('Server is up on port 3000'); //this will type to the terminal once the server is ready
+// app.listen(3000,()=>{
+//   console.log('Server is up on port 3000'); //this will type to the terminal once the server is ready
+// });
+app.listen(port,()=>{
+  console.log(`Server is up on port ${port}`); //this will type to the terminal once the server is ready
 });
+
 //Server is now up. Go to Chrome and type localhost:3000 See the page showing 'Hello Express'
 //Check the Developer Tools>Network Refresh page and see localhost request.
 //See that it says Type>document. Click to see the details in Headers. This stores a ton of information e.g. Request URL, Request Method GET, Status Code.
@@ -179,3 +186,67 @@ app.listen(3000,()=>{
 //$defaults write com.apple.finder AppleShowAllFiles YES
 //$killall Finder    so now you can see hidden folders in your Finder window
 //Do not mess by going manually inside the .git folder. You terminal/bash commands to control it
+//always run the commands from within the root directory of your project e.g. node-web-server
+//$git status       to see what is tracked by git. You don't need to track all of your files
+//for example node_modules is automatically generated once you type $npm install and this is down to the specific
+//machine that runs your app. So it is better not to track this into the repository but the the user manually install it
+//in his machine. server.log is also for collecting log files it is not of critical importance for running the app
+//however public,views,package.json and above all server.js are critical for running the application and should be tracked
+//$git add server.js
+//$git add public/     and so on for the files you want to track
+//create a new file .gitignore and place within it nodes_modules and server.log that we don't want to track
+//$git add .gitignore
+//$git status shows that all files are under the initial commit
+//$git rm --cached filename to unstage
+//To commit you first create the stage i.e. what new to track and then provide a message for the commit. We already added the file above.
+//$git commit -m 'Initial commit'      -m is for message of the commit and 'Initial commit' is the message
+//so now we have save the current state of our app. If we need to revert to that version of the app is now quite simple
+
+//GitHub is a 3rd party server that allows us to upload our code and make it either public or private so if our pc breaks down we can always
+//retrieve our code. Also great for collaboration
+//We usee SSH keys which is the way to confirm that the communication between our PC and the GitHub server is secure.
+//If in windows you will have to use gitbash for th efollowing commands. For macOS is fine
+//Here https://help.github.com/articles/connecting-to-github-with-ssh/ is a guide about the SSH keys creation we will be following
+//  the user directory can be accessed by typing ~/
+//$ls -al ~/.ssh       Check if there are any ssh key in the userdirectory/.ssh  There is a key if you have an id_rsa file
+//$ssh-keygen -t rsa -b 4096 -C 'ang_diam@yahoo.com'
+//press enter to get the default options and see that the id_rsa file is generated (identificaton/public key) and stored in the .ssh file
+//$ls -al ~/.ssh will now show the id_rsa key whichis private sits in your PC and is your PC's identity and you should never give to anyone
+//and the id_rsa.pub which is the public key which is what you pass tp services like GitHub to make your file available to a 3rd party
+//time to start the ssh engine and inform it about our key
+//$eval "$(ssh-agent -s)"   This should come back with something like Agent pid 16547    pid is process id
+//$ssh-add ~/.ssh/id_rsa      Tell the ssh engine where this file lives  => Identity added )now private and public keys will be used when communicating with 3rd party like github
+//Ready now to configure GitHub. Go to browser https://github.com and sign in to your GitHub account
+//GitHub  Dashboard>Settings>SSH and GPG keys  New SSH Key name it  and in terminal $pbcopy <~/.ssh/id_rsa.pub this copies the key to the clipboard adn then paste it under the name in the browser
+//$ssh -T git@github.com from anywhere i your terminal. Press enter and then should see a hi angdiamd2 message. This confirms the communication with GitHub is established
+//Back to GitHub home page new Repository give it a name an a description Public or Private and click Create Repository.
+// use or push an existing repository from the command line
+//type the 2 lines below in the terminal
+//$git remote add origin https://github.com/angdiamd2/node-web-server-udcourse.git   This says that I want to push the repository on my pc to that web address. You may have multiple remotes
+//for example you may want to push this also to your heroku app account
+//next $git push -u origin master to push your files to github you will do this with every update
+//if you refresh the webpage again you will see all the files meant to be tracked in your GitHub repository.
+
+//Heroku
+//Log in to your Heroku account.   in the browser type toolbelt.heroku.com to install the heroku command line. Open a new terminal $heroku --help to see it is installed
+//$heroku login   now you can start deploying applications to the heroku servers
+//$heroku keys:add This brings your SSH key. Choose the id_rsa.pub key and press yes to upload to heroku.
+//$heroku keys  to see your keys stored at heroku.  You can remove a key by heroku keys:remove myemailaddress
+//$ssh -v git@heroku.com   to test the connection. Press Yes. If Authentication succeeded (publickey) then the connection was a success, otherwise you get permission denied(publickey)
+/*For an app to work with heroku, heroku exprects some basic thing sto exist inside the app
+At the moment
+app.listen(3000,()=>{
+  console.log('Server is up on port 3000'); //this will type to the terminal once the server is ready
+});  we use ht elocal port 3000. For heroku we want to use the local enironment port which will be different to ours and can change everytime we run the app
+if in the terminal we type env for mac or SET for windows we can see a long list of key:value pairs that are the environment variables
+see for example the LOGNAME=Angelos_macbookPro
+At the very top inside the server.js we type
+const port = process.env.PORT || 3000; and then we replace the 3000 in app.listen with the port const
+This means that if the app is run from heroku it will load the process.env.PORT but if it is run from our machine/locally it will load the 3000 port
+Now the server.js runs as normal locally $node server.js  if you are in the root directory
+*/
+//Heroku will not know what to run in its terminal.
+//Go to package.json In scripts you can write any script that basically is the terminal line that Heroku will run
+//so type "start":"node server.js"   It is quite important to type "start" because this is what heroku will look for as a key and the value next to it, to understand what s meant to run
+//npm created the "test" script by default
+//if you type $npm start then you run the app as if you typed $node server.js and you simulate what heroku will run
